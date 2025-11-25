@@ -29,6 +29,10 @@ def parse_docx():
         # Comments are stored in the document's part relationships
         if hasattr(doc, '_part') and hasattr(doc._part, 'rels'):
             for rel in doc._part.rels.values():
+                # Skip external relationships (hyperlinks, etc.)
+                if rel.is_external:
+                    continue
+                    
                 if "comments" in rel.target_ref:
                     comments_part = rel.target_part
                     # Parse comments XML
@@ -77,5 +81,6 @@ def health():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
 
 
