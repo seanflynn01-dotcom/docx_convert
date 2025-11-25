@@ -62,7 +62,10 @@ def parse_docx():
         })
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"ERROR: {error_details}")  # This will show in Render logs
+        return jsonify({'error': str(e), 'details': error_details}), 500
 
 @app.route('/health', methods=['GET'])
 def health():
@@ -71,3 +74,4 @@ def health():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
