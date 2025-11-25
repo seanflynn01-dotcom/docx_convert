@@ -1,3 +1,5 @@
+import sys
+sys.stdout.flush()
 from flask import Flask, request, jsonify
 from docx import Document
 from io import BytesIO
@@ -64,7 +66,8 @@ def parse_docx():
     except Exception as e:
         import traceback
         error_details = traceback.format_exc()
-        print(f"ERROR: {error_details}")  # This will show in Render logs
+        sys.stderr.write(f"ERROR: {error_details}\n")
+        sys.stderr.flush()
         return jsonify({'error': str(e), 'details': error_details}), 500
 
 @app.route('/health', methods=['GET'])
@@ -74,4 +77,5 @@ def health():
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
 
